@@ -1,16 +1,17 @@
-import 'dart:ui';
-
-import 'package:delices_app/age.dart';
+import 'package:delices_app/pagedirection.dart';
+import 'package:delices_app/welcome_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await Firebase.initializeApp();
   runApp(const DelicesApp());
 }
 
@@ -19,10 +20,40 @@ class DelicesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Delices',
+      theme: ThemeData(
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: const Color.fromRGBO(70, 32, 9, 1)),
+      ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const AuthWrapper(), // Changed from WelcomePage to AuthWrapper
+    );
+  }
+}
+
+// New AuthWrapper to handle authentication state
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // Show loading while checking auth state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SplashScreen();
+        }
+
+        // If user is logged in, go to DirectionPage
+        if (snapshot.hasData && snapshot.data != null) {
+          return const PageDirection();
+        }
+
+        // If user is not logged in, show WelcomePage
+        return const WelcomePage();
+      },
     );
   }
 }
@@ -35,10 +66,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final TextEditingController _nomController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nomController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    //width = 392.72727272727275
-    // height = 803.6363636363636
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -48,8 +85,8 @@ class _SplashScreenState extends State<SplashScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0x00eba177), 
-              Color(0xFFE89265), 
+              Color(0x00eba177),
+              Color(0xFFE89265),
             ],
           )),
           child: Column(
@@ -59,51 +96,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: MediaQuery.sizeOf(context).height * 0.04,
               ),
               Image.asset("./assets/logo.png"),
-              Text("Hi! What's your name?",
-                  style: GoogleFonts.tiltWarp(
-                    fontSize: MediaQuery.sizeOf(context).width * 0.066,
-                  )),
-              Container( 
-                width: MediaQuery.sizeOf(context).width * 0.77,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    color: Colors.white),
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 25.0),
-                  child: TextField(
-                      cursorColor: Colors.black,
-                      cursorWidth: 1.5,
-                      decoration: InputDecoration(
-                        border:
-                            InputBorder.none,
-                        enabledBorder: InputBorder
-                            .none, 
-                        focusedBorder: InputBorder.none,
-                      )),
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.2,
-              ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => const AgePage(),));
-                },
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width * 0.6,
-                  height: MediaQuery.sizeOf(context).height * 0.065,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 70, 32, 9),
-                      borderRadius: BorderRadius.circular(30)),
-                  child: Center(
-                      child: Text("Continue",
-                          style: GoogleFonts.tiltWarp(
-                              color: Colors.white,
-                              fontSize:
-                                  MediaQuery.sizeOf(context).width * 0.045))),
-                ),
-              ),
-              SizedBox(height: MediaQuery.sizeOf(context).height*0.02,)
             ],
           ),
         ),

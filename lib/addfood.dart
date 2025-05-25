@@ -10,13 +10,13 @@ class AddFood extends StatefulWidget {
 }
 
 class _AddFoodState extends State<AddFood> {
-  late TextEditingController name = TextEditingController();
+  late TextEditingController nom = TextEditingController();
   late TextEditingController description = TextEditingController();
   late TextEditingController ingredients = TextEditingController();
 
   @override
   void initState() {
-    name = TextEditingController();
+    nom = TextEditingController();
     description = TextEditingController();
     ingredients = TextEditingController();
     super.initState();
@@ -102,7 +102,7 @@ class _AddFoodState extends State<AddFood> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Plat Name',
+                                'Plat nom',
                                 style: GoogleFonts.tiltWarp(
                                     fontSize: MediaQuery.sizeOf(context).width *
                                         0.05),
@@ -120,7 +120,7 @@ class _AddFoodState extends State<AddFood> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 25.0),
                                     child: TextField(
-                                        controller: name,
+                                        controller: nom,
                                         keyboardType: TextInputType.name,
                                         cursorColor: Colors.black,
                                         cursorWidth: 1.5,

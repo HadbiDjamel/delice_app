@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "606200410554",
+    "project_id": "delices-6e655",
+    "storage_bucket": "delices-6e655.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606200410554:android:968823ff519506d3a4ed83",
+        "android_client_info": {
+          "package_name": "com.example.delices_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1_y3eBD3o2jXTurbCaTeYltjbk-8Df8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
